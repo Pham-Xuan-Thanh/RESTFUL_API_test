@@ -1,0 +1,296 @@
+definitions:
+  dto.CreateCameraPortalDto:
+    properties:
+      box_id:
+        type: integer
+      name:
+        type: string
+      service_id:
+        type: string
+      stream_name:
+        type: string
+      stream_uri:
+        type: string
+    required:
+    - box_id
+    - name
+    - stream_name
+    - stream_uri
+    type: object
+  dto.UpdateCameraDto:
+    properties:
+      box_id:
+        type: integer
+      id:
+        type: integer
+      is_active:
+        type: integer
+      name:
+        type: string
+      stream_name:
+        type: string
+      stream_uri:
+        type: string
+    required:
+    - id
+    type: object
+  entities.Camera:
+    properties:
+      box_id:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      instance_id:
+        type: integer
+      instance_vod_id:
+        type: integer
+      is_PTZ_enabled:
+        type: integer
+      is_active:
+        type: integer
+      is_added_streamfile:
+        type: integer
+      is_ai_active:
+        type: integer
+      is_ai_started:
+        type: integer
+      is_connected:
+        type: integer
+      is_connected_streamfile:
+        type: integer
+      is_recording_set:
+        type: integer
+      latest_alerted_at:
+        type: string
+      latest_disconnected:
+        type: string
+      latest_stopped_record:
+        type: string
+      name:
+        type: string
+      service_id:
+        type: string
+      snapshot:
+        type: string
+      status:
+        type: string
+      stream_name:
+        type: string
+      stream_uri:
+        type: string
+      streaming_protocol:
+        type: integer
+      updated_at:
+        type: string
+      video_coding_standard:
+        type: integer
+    type: object
+  helpers.Response:
+    properties:
+      data:
+        type: object
+      error:
+        type: object
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /api/portal/cameras:
+    get:
+      consumes:
+      - application/json
+      description: get cameras
+      parameters:
+      - description: int
+        in: query
+        name: box_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entities.Camera'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: get all camera
+      tags:
+      - portal
+    post:
+      consumes:
+      - application/json
+      description: add single camera
+      parameters:
+      - description: CameraDto
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCameraPortalDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Camera'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: add single camera
+      tags:
+      - portal
+  /api/portal/cameras/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete single camera
+      parameters:
+      - description: Camera ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Box ID
+        in: query
+        name: box_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Camera'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: delete single camera
+      tags:
+      - portal
+    get:
+      consumes:
+      - application/json
+      description: get single camera from a box
+      parameters:
+      - description: Camera ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Box ID
+        in: query
+        name: box_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Camera'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: get single camera from a box
+      tags:
+      - portal
+    put:
+      consumes:
+      - application/json
+      description: update single camera
+      parameters:
+      - description: Camera ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Box ID
+        in: query
+        name: box_id
+        required: true
+        type: integer
+      - description: updateCameraDto
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCameraDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.Camera'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: update single camera
+      tags:
+      - portal
+swagger: "2.0"
