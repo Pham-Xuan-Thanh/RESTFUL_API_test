@@ -23,6 +23,7 @@ func main() {
 	gin.ForceConsoleColor()
 
 	server := configs.InitServer(db)
+	// Miragte db
 	db.AutoMigrate(&entities.Vods{})
 	err = server.Start()
 	if err != nil {
