@@ -24,7 +24,7 @@ func main() {
 
 	server := configs.InitServer(db)
 	// Miragte db
-	db.AutoMigrate(&entities.Vods{})
+	db.AutoMigrate(entities.Device{})
 	err = server.Start()
 	if err != nil {
 		log.Fatal("Cannot start server:", err)

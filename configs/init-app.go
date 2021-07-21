@@ -1,14 +1,14 @@
 package configs
 
 import (
+	"fmt"
 	"golang-example/controllers"
 	"golang-example/docs"
 	"golang-example/repositories"
 	"golang-example/services"
-	"fmt"
 	"os"
 	"time"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -32,12 +32,23 @@ func InitServer(db *gorm.DB) *Server {
 	router := gin.New()
 
 	// init module
-	vodReposi := repositories.NewVODRepository(db)
 
-	vodService := services.NewVODService(vodReposi)
+	deviceReposi := repositories.NewDeviceRepository(db)
+	deviceService := services.NewDeviceService(deviceReposi)
+	deviceController := controllers.NewDeviceController(deviceService)
 
-	vodController := controllers.NewVODController(vodService)
 	// init logger
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT","GET","POST", "PATCH"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		// AllowOriginFunc: func(origin string) bool {
+		// 	return origin == "https://github.com"
+		// },
+		// MaxAge: 12 * time.Hour,
+	}))
 	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 
 		// your custom format
@@ -56,12 +67,14 @@ func InitServer(db *gorm.DB) *Server {
 
 	router.Use(gin.Recovery())
 
-	vodRouter := router.Group("/api/vod")
+	deviRouter := router.Group("/api/device")
 	{
-		vodRouter.POST("/", vodController.AddRecordFile)
-		vodRouter.GET("/", vodController.GetAllRecordFile)
-		vodRouter.PUT("/", vodController.UpdateRecordFile)
-		vodRouter.GET("/search", vodController.GetAllVodByFilter)
+		deviRouter.POST("/", deviceController.InsertDevice)
+		deviRouter.GET("/", deviceController.GetAll)
+		deviRouter.PUT("/", deviceController.UpdateDevice)
+		deviRouter.GET("/search", deviceController.GetAllDeviceByFilter)
+		deviRouter.DELETE("/",deviceController.DeleteDevice)
+
 	}
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

@@ -1,0 +1,9 @@
+/.idea
+/.git
+/Dockerfile
+/app
+/Makefile
+/docs
+/helpers
+/middlewares
+/ultils
